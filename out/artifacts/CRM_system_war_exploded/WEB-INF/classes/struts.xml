@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <!--开发模式-->
+    <constant name="struts.devMode" value="true"/>
+    <!--标签主题,简单风格-->
+    <constant name="struts.ui.theme" value="simple"/>
+    <!--员工配置-->
+    <package name="common" namespace="/" extends="struts-default">
+        <interceptors>
+            <!--声明拦截器-->
+            <interceptor name="loginInterceptor" class="com.tsmt.crm.web.interceptor.LoginInterceptor"/>
+            <!--自定义拦截器栈-->
+            <interceptor-stack name="loginStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="loginInterceptor">
+                    <!--不拦截的页面-->
+                    <param name="excludeMethods">login</param>
+                </interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+
+        <!--声明默认-->
+        <default-interceptor-ref name="loginStack"/>
+
+        <!--全局结果集-->
+        <global-results>
+            <result name="login">/WEB-INF/pages/login.jsp</result>
+        </global-results>
+
+        <!--访问WEB-INF下的文件
+                方式一:frame.jsp -> struts -> UiAction
+                    <action name="UiAction" class="com.tsmt.crm.web.action.UiAction" method="execute">
+                        <result name="success">/WEB-INF/pages/frame/top.jsp</result>
+                    </action>
+                方式二:父类 -> 默认值省略
+                    <action name="UiAction" >
+                        <result >/WEB-INF/pages/frame/top.jsp</result>
+                    </action>
+                方式三:通配符
+                    <action name="UiAction_*_*" >
+                        <result >/WEB-INF/pages/{1}/{2}.jsp</result>
+                    </action>
+        -->
+        <action name="UiAction_*_*">
+            <result>/WEB-INF/pages/{1}/{2}.jsp</result>
+        </action>
+    </package>
+
+    <!--加载其他配置文件-->
+    <!--职务-->
+    <include file="struts-post.xml"/>
+    <!--员工-->
+    <include file="struts-staff.xml"/>
+    <!--课程类别-->
+    <include file="struts-coursetype.xml"></include>
+</struts>    
